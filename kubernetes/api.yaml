@@ -1,0 +1,86 @@
+# deployment
+#
+# set up a deployment for the user API.
+# for the prototype we can pull the image from the local image registry
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+ name: user-service
+spec:
+ selector:
+  matchLabels:
+   app: user-service
+ replicas: 1
+ template:
+  metadata:
+   labels:
+    app: user-service
+  spec:
+   containers:
+    - name: user-service
+      image: localhost:5000/user-service:latest
+
+
+---
+# service
+
+apiVersion: v1
+kind: Service
+metadata:
+ name: user-service
+spec:
+ selector:
+  app: user-service
+ ports:
+  - port: 80 # Default port for image
+    targetPort: 80 # Default port for image
+
+---
+# replacePathRegex middleware
+#
+# strips the first part of the request path and rewrites it to match the backend URL
+
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: user-service-path-middleware
+spec:
+  replacePathRegex:
+    regex: ^/api/users
+    replacement: /
+
+---
+# custom header middleware
+
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: user-service-header-middleware
+spec:
+  headers:
+    customRequestHeaders:
+      X-Forwarded-For: "/api/users"
+
+---
+# ingress
+#
+# Sets up an ingress to route traffic to the user service
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: user-service
+  annotations:
+    traefik.ingress.kubernetes.io/router.middlewares: default-user-service-path-middleware@kubernetescrd, default-user-service-header-middleware@kubernetescrd
+spec:
+  rules:
+  - http:
+      paths:
+        - path: /api/users
+          pathType: Prefix
+          backend:
+            service:
+              name: user-service
+              port:
+                number: 80

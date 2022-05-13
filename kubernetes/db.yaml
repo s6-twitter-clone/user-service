@@ -1,0 +1,46 @@
+# service
+#
+# set up a service for the organization database.
+# set the target port and port to the standard postgres port
+
+apiVersion: v1
+kind: Service
+metadata:
+ name: user-database
+spec:
+ selector:
+  app: user-database
+ ports:
+  - port: 5432 
+    targetPort: 5432
+
+---
+# deployment
+#
+# set up a single pod with the postgres image.
+# The credentials are passed through the environment variables.
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+ name: user-database
+spec:
+ selector:
+  matchLabels:
+   app: user-database
+ replicas: 1
+ template:
+  metadata:
+   labels:
+    app: user-database
+  spec:
+   containers:
+    - name: user-database
+      image: postgres:14.2
+      env:
+      - name: POSTGRES_USER
+        value: "test"
+      - name: POSTGRES_PASSWORD
+        value: "test"
+      - name: POSTGRES_DB
+        value: "user"
