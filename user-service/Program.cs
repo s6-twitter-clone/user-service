@@ -15,6 +15,7 @@ builder.Services.AddControllers();
 
 builder.Services.AddTransient(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
+builder.Services.AddSingleton<IEventService, EventService>();
 builder.Services.AddTransient<UserService>();
 
 builder.Services.AddDbContext<DatabaseContext>(options =>
