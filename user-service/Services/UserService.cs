@@ -1,15 +1,19 @@
 ﻿using user_service.Exceptions;
 using user_service.Interfaces;
 using user_service.Models;
+using user_service.Models.Events;
 
 namespace user_service.Services;
 
 public class UserService
 {
     private readonly IUnitOfWork unitOfWork;
-    public UserService(IUnitOfWork unitOfWork)
+    private readonly IEventService eventService;
+
+    public UserService(IUnitOfWork unitOfWork, IEventService eventService)
     {
         this.unitOfWork = unitOfWork;
+        this.eventService = eventService;
     }
 
     public User GetUserById(string id)
@@ -54,6 +58,9 @@ public class UserService
         };
 
         unitOfWork.Users.Add(user);
+
+        eventService.Publish("user-added", new AddUserEvent { Id = id, DisplayName = displayName });
+
         unitOfWork.Commit();
 
         return user;
@@ -71,6 +78,13 @@ public class UserService
 
         user.Bio = bio;
         user.DisplayName = displayName;
+
+        eventService.Publish("user-updated", new UpdateUserEvent
+        {
+            Id = id,
+            DisplayName = displayName,
+            Bio= bio
+        });
 
         unitOfWork.Commit();
 
