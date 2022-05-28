@@ -35,9 +35,9 @@ public class UserService
 
     public User SetUpAccount(string id, string displayName)
     {
-        if(Guid.TryParse(id, out _))
+        if(string.IsNullOrWhiteSpace(id))
         {
-            throw new BadRequestException($"Invalid id {id}");
+            throw new BadRequestException($"Id cannot be empty.");
         }
 
         if(unitOfWork.Users.GetById(id) is not null)
@@ -47,7 +47,7 @@ public class UserService
 
         if(string.IsNullOrWhiteSpace(displayName))
         {
-            throw new BadHttpRequestException("Display name cannot by empty.");
+            throw new BadRequestException("Display name cannot be empty.");
         }
 
         var user = new User
