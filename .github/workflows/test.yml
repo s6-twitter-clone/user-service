@@ -1,0 +1,26 @@
+name: test
+
+on:
+  push:
+    branches: ['*']
+    tags: ['v*.*.*']
+
+jobs:
+  unit-tests-and-lint:
+    name: run unit tests and test lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: '6.0.x'
+        
+      - name: Unit tests
+        # Make sure that all the tests are in the 'tests' folder in the root
+        working-directory: ./user-service-tests
+        run: dotnet test
+      
+      - name: Formatting
+        continue-on-error: true
+        run: dotnet format --verify-no-changes
