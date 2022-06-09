@@ -27,7 +27,7 @@ public class EventService : IEventService, IDisposable
 
     public void Publish<T>(string exchange, string topic, T data)
     {
-        var channel = connection.CreateModel();
+        using var channel = connection.CreateModel();
 
         channel.ExchangeDeclare(exchange, ExchangeType.Direct, durable: true, autoDelete: false);
 
