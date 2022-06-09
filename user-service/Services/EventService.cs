@@ -25,25 +25,32 @@ public class EventService : IEventService, IDisposable
         connection.Close();
     }
 
-    public void Publish<T>(string topic, T data)
+    public void Publish<T>(string exchange, string topic, T data)
     {
         var channel = connection.CreateModel();
 
-        channel.QueueDeclare(topic, exclusive: false, autoDelete: false);
+        channel.ExchangeDeclare(exchange, ExchangeType.Direct, durable: true, autoDelete: false);
 
         var json = JsonSerializer.Serialize(data);
         var body = Encoding.UTF8.GetBytes(json);
 
-        channel.BasicPublish(exchange: "", routingKey: topic, body: body);
+        channel.BasicPublish(exchange: exchange, routingKey: topic, body: body);
     }
 
-    public void subscribe<T>(string topic, Action<T> handler)
+    public void subscribe<T>(string exchange, string queue, string topic,  Action<T> handler)
     {
         var channel = connection.CreateModel();
 
-        channel.QueueDeclare(topic, exclusive: false, autoDelete: false);
+        channel.ExchangeDeclare(exchange: exchange, type: ExchangeType.Direct, durable: true, autoDelete: false);
+        channel.QueueDeclare(queue, exclusive: false, autoDelete: false);
+        channel.QueueBind(exchange: exchange, routingKey: topic, queue: queue);
+
+        channel.BasicQos(0, 1, false);
+
+        
 
         var consumer = new EventingBasicConsumer(channel);
+
         consumer.Received += (model, eventArgs) =>
         {
             var body = eventArgs.Body.ToArray();
@@ -54,7 +61,7 @@ public class EventService : IEventService, IDisposable
             handler.Invoke(data);
         };
 
-        channel.BasicConsume(queue: topic, autoAck: true, consumer: consumer);
+        channel.BasicConsume(queue: queue, autoAck: true, consumer: consumer);
     }
 
 }

@@ -59,7 +59,7 @@ public class UserService
 
         unitOfWork.Users.Add(user);
 
-        eventService.Publish("user-added", new AddUserEvent { Id = id, DisplayName = displayName });
+        eventService.Publish(exchange: "user-exchange", topic: "user-added", new AddUserEvent { Id = id, DisplayName = displayName });
 
         unitOfWork.Commit();
 
@@ -79,7 +79,7 @@ public class UserService
         user.Bio = bio;
         user.DisplayName = displayName;
 
-        eventService.Publish("user-updated", new UpdateUserEvent
+        eventService.Publish(exchange: "user-exchange", topic: "user-updated", new UpdateUserEvent
         {
             Id = id,
             DisplayName = displayName,
