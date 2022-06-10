@@ -55,9 +55,8 @@ jobs:
       with:
         namespace: default
         manifests: |
-          manifests/deployment.yml
-          manifests/service.yml
-          manifests/ingress.yml
+          manifests/user-service.yaml
+          manifests/user-db.yaml
           manifests/rabbitmq.yaml
         images: |
           twiddit.azurecr.io/twidditcluster:${{ github.sha }}
