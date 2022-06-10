@@ -27,7 +27,7 @@ jobs:
     - name: Build and push image to ACR
       id: build-image
       run: |
-        docker build "$GITHUB_WORKSPACE/user-service" -f  "user-service/Dockerfile" -t twiddit.azurecr.io/twidditcluster:${{ github.sha }} --label dockerfile-path=user-service/Dockerfile .
+        docker build "$GITHUB_WORKSPACE" -f  "user-service/Dockerfile" -t twiddit.azurecr.io/twidditcluster:${{ github.sha }} --label dockerfile-path=user-service/Dockerfile
         docker push twiddit.azurecr.io/twidditcluster:${{ github.sha }}
     
     - uses: azure/k8s-set-context@v1
