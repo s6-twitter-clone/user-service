@@ -60,7 +60,7 @@ spec:
         - host: default-twidditcluster-7cb2.bdc33b62f0d9413db518.uksouth.aksapp.io
           http:
             paths:
-            - path: /api/users
+            - path: /
               pathType: Prefix
               backend:
                 service:
