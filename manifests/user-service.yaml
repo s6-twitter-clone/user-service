@@ -65,4 +65,5 @@ spec:
               backend:
                 service:
                     name: "twidditcluster-7cb2"
-                    port: 80
+                    port:
+                      number: 80
