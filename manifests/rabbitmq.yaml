@@ -1,0 +1,39 @@
+# service
+#
+# set up a service for the organization database.
+# set the target port and port to the standard postgres port
+
+apiVersion: v1
+kind: Service
+metadata:
+ name: rabbitmq
+spec:
+ selector:
+  app: rabbitmq
+ ports:
+  - port: 5672
+    targetPort: 5672
+
+---
+# deployment
+#
+# set up a single pod with the postgres image.
+# The credentials are passed through the environment variables.
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+ name: rabbitmq
+spec:
+ selector:
+  matchLabels:
+   app: rabbitmq
+ replicas: 1
+ template:
+  metadata:
+   labels:
+    app: rabbitmq
+  spec:
+   containers:
+    - name: rabbitmq
+      image: rabbitmq:3-alpine
