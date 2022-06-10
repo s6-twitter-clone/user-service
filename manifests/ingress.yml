@@ -1,0 +1,17 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+    name: "twidditcluster-7cb2"
+    labels:
+        app: "twidditcluster-7cb2"
+    annotations:
+        kubernetes.io/ingress.class: addon-http-application-routing
+spec:
+    rules:
+        - host: default-twidditcluster-7cb2.bdc33b62f0d9413db518.uksouth.aksapp.io
+          http:
+            paths:
+            - path: /
+              backend:
+                serviceName: "twidditcluster-7cb2"
+                servicePort: 80
