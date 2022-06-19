@@ -1,12 +1,13 @@
 # deployment
 #
 # set up a deployment for the user API.
+
 apiVersion : apps/v1
 kind: Deployment
 metadata:
   name: "twidditcluster-7cb2"
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: "twidditcluster-7cb2"

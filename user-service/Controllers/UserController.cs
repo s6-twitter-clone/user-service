@@ -18,7 +18,8 @@ public class UserController : ControllerBase
     }
 
     [HttpGet("{id}")]
-   public UserDTO GetUser(string id)
+    [Authorize]
+    public UserDTO GetUser(string id)
     {
         var user = userService.GetUserById(id);
 
