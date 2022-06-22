@@ -65,7 +65,14 @@ spec:
     rules:
     - http:
         paths:
-        - path: /api/users*
+        - path: /api/users/*
+          pathType: Prefix
+          backend:
+            service:
+                name: "twiddit-810e"
+                port:
+                  number: 80
+        - path: /api/users
           pathType: Prefix
           backend:
             service:
