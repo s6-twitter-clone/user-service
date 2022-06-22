@@ -1,0 +1,17 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+    name: "twiddit-810e"
+    labels:
+        app: "twiddit-810e"
+    annotations:
+        kubernetes.io/ingress.class: addon-http-application-routing
+spec:
+    rules:
+        - host: default-twiddit-810e.5fd06ac12e634d9096be.uksouth.aksapp.io
+          http:
+            paths:
+            - path: /
+              backend:
+                serviceName: "twiddit-810e"
+                servicePort: 80
