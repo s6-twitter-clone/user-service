@@ -24,13 +24,7 @@ spec:
             timeoutSeconds: 5
             httpGet:
               port: 80
-              path: /healthz/liveness
-          readinessProbe:
-            initialDelaySeconds: 5
-            timeoutSeconds: 5
-            httpGet:
-              port: 80
-              path: /healthz/readiness
+              path: /healthz
           ports:
           - containerPort: 80
 

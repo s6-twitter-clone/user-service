@@ -9,6 +9,10 @@ using user_service.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
+
+builder.Services.AddHealthChecks();
+
+
 // Add services to the container.
 
 builder.Services.AddControllers();
@@ -67,9 +71,11 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
     };
 });
 
+
+
 builder.Services.AddAuthorization();
 
-builder.Services.AddHealthChecks();
+
 
 
 var app = builder.Build();
@@ -116,11 +122,14 @@ app.UseHttpsRedirection();
 
 app.UseCors(c => c.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
 
+
+app.MapHealthChecks("/healthz");
+
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
 
-app.MapHealthChecks("/healthz");
+
 
 app.Run();
