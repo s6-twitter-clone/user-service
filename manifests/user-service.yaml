@@ -19,6 +19,18 @@ spec:
       containers:
         - name: "twiddit-810e"
           image: "twiddit2.azurecr.io/twiddit"
+          livenessProbe:
+            initialDelaySeconds: 20
+            timeoutSeconds: 5
+            httpGet:
+              port: 80
+              path: /healthz/liveness
+          readinessProbe:
+            initialDelaySeconds: 5
+            timeoutSeconds: 5
+            httpGet:
+              port: 80
+              path: /healthz/readiness
           ports:
           - containerPort: 80
 
