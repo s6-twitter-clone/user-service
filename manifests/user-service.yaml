@@ -53,17 +53,16 @@ metadata:
     labels:
         app: "twiddit-810e"
     annotations:
-        kubernetes.io/ingress.class: addon-http-application-routing
+        kubernetes.io/ingress.class: azure/application-gateway
         nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
     rules:
-        - host: twiddit.5fd06ac12e634d9096be.uksouth.aksapp.io
-          http:
-            paths:
-            - path: /api/users
-              pathType: Prefix
-              backend:
-                service:
-                    name: "twiddit-810e"
-                    port:
-                      number: 80
+    - http:
+        paths:
+        - path: /api/users
+          pathType: Prefix
+          backend:
+            service:
+                name: "twiddit-810e"
+                port:
+                  number: 80
